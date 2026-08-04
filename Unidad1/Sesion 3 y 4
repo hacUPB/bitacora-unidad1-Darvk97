@@ -4,27 +4,27 @@
 
 1. Identifica una instrucción que use la ALU y explica qué hace.
 
-La instrucción D=D-A utiliza la ALU para realizar una resta entre el contenido del registro D y el registro A. El resultado queda almacenado en D.
+R: La instrucción D=D-A utiliza la ALU para realizar una resta entre el contenido del registro D y el registro A. El resultado queda almacenado en D.
 
 2. ¿Para qué sirve el registro PC?
 
-El registro PC (Program Counter) guarda la dirección de la siguiente instrucción que la CPU debe ejecutar.
+R: El registro PC (Program Counter) guarda la dirección de la siguiente instrucción que la CPU debe ejecutar.
 
 3. ¿Cuál es la diferencia entre @i y @READKEYBOARD?
 
-@i hace referencia a una variable almacenada en memoria RAM, mientras que @READKEYBOARD hace referencia a una etiqueta del programa utilizada para realizar un salto.
+R: @i hace referencia a una variable almacenada en memoria RAM, mientras que @READKEYBOARD hace referencia a una etiqueta del programa utilizada para realizar un salto.
 
 4. Describe qué se necesita para leer el teclado y mostrar información en la pantalla.
 
-Para leer el teclado se utiliza la dirección de memoria KBD, donde se almacena el código de la tecla presionada. Para mostrar información en la pantalla se escriben valores en las direcciones de memoria que comienzan en SCREEN.
+R: Para leer el teclado se utiliza la dirección de memoria KBD, donde se almacena el código de la tecla presionada. Para mostrar información en la pantalla se escriben valores en las direcciones de memoria que comienzan en SCREEN.
 
 5. Identifica un bucle en el programa y explica su funcionamiento.
 
-El bucle comienza en la etiqueta (READKEYBOARD). El programa revisa continuamente si se presionó una tecla y, dependiendo del resultado, actualiza la pantalla y vuelve al inicio del ciclo.
+R: El bucle comienza en la etiqueta (READKEYBOARD). El programa revisa continuamente si se presionó una tecla y, dependiendo del resultado, actualiza la pantalla y vuelve al inicio del ciclo.
 
 6. Identifica una condición en el programa y explica su funcionamiento.
 
-La instrucción D;JNE verifica si el contenido del registro D es diferente de cero. Si la condición se cumple, el programa salta a la etiqueta KEYPRESSED; de lo contrario continúa ejecutando las siguientes instrucciones.
+R: La instrucción D;JNE verifica si el contenido del registro D es diferente de cero. Si la condición se cumple, el programa salta a la etiqueta KEYPRESSED; de lo contrario continúa ejecutando las siguientes instrucciones.
 
 # Actividad 4
 
