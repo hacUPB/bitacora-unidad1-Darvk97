@@ -27,8 +27,9 @@ Al ejecutar el programa observé que suma los valores 1 y 2, y luego guarda el r
 
 # Actividad 2 – Experimento 2
 
-### Programa
+## Programa
 
+```asm
 @5
 D=A
 @10
@@ -38,6 +39,7 @@ M=D
 (END)
 @END
 0;JMP
+```
 
 Al ejecutar el programa comprobé que la suma de 5 + 10 = 15 y el valor quedó correctamente almacenado en la dirección de memoria 20.
 
