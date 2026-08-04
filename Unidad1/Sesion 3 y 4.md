@@ -1,6 +1,6 @@
-## Sesión 3 ##
+# Sesión 3 #
 
-## Actividad 3
+# Actividad 3
 
 1. Identifica una instrucción que use la ALU y explica qué hace.
 
