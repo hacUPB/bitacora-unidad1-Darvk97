@@ -43,7 +43,7 @@ Los ciclos while y for generan prácticamente el mismo código en ensamblador. L
 
 ### Programa 1
 
-```
+```asm
 C++
 int a = 10;
 int *p;
@@ -74,7 +74,7 @@ El puntero guarda la dirección de la variable a. Cuando uso A=M, el procesador 
 
 ### Programa 2
 
-```
+```asm
 C++
 int a = 10;
 int b = 5;
