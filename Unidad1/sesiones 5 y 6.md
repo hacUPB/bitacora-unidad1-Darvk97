@@ -6,26 +6,24 @@ Suma 1 + 2 + ... + 100
 
 ```asm
 @sum
-M=0          // sum = 0
-
+M=0          
 @i
-M=1          // i = 1
-
+M=1          
 (LOOP)
     @i
     D=M
     @100
     D=D-A
     @END
-    D;JGT      // Si i > 100 termina
+    D;JGT      
 
     @i
     D=M
     @sum
-    M=M+D      // sum = sum + i
+    M=M+D      
 
     @i
-    M=M+1      // i++
+    M=M+1      
 
     @LOOP
     0;JMP
@@ -49,6 +47,7 @@ int a = 10;
 int *p;
 p = &a;
 *p = 20;
+
 Ensamblador
 // a = RAM[16]
 // p = RAM[17]
@@ -56,16 +55,15 @@ Ensamblador
 @10
 D=A
 @16
-M=D          // a = 10
-
+M=D          
 @16
 D=A
 @17
-M=D          // p = &a
+M=D        
 
 @17
 A=M
-M=20         // *p = 20
+M=20         
 ```
 
 Reflexión:
@@ -82,7 +80,9 @@ int *p;
 
 p = &a;
 b = *p;
+
 Ensamblador
+
 // a = 16
 // b = 17
 // p = 18
@@ -90,24 +90,23 @@ Ensamblador
 @10
 D=A
 @16
-M=D          // a = 10
+M=D         
 
 @5
 D=A
 @17
-M=D          // b = 5
-
+M=D         
 @16
 D=A
 @18
-M=D          // p = &a
+M=D          
 
 @18
 A=M
-D=M          // D = *p
+D=M          
 
 @17
-M=D          // b = *p
+M=D          
 ```
 
 Reflexión:
