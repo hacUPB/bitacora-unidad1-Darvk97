@@ -1,7 +1,8 @@
-* Sesión 5 *
-Programa en ensamblador
+# Sesión 5
 
-// Suma 1 + 2 + ... + 100
+### Programa en ensamblador
+
+Suma 1 + 2 + ... + 100
 
 @sum
 M=0          // sum = 0
