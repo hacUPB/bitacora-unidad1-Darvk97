@@ -41,33 +41,40 @@ R: Se pasa la dirección de c usando &c. Dentro de la función se utiliza *n par
 
 ### Reflexión final:
 
+```asm
 swapPorValor
 void swapPorValor(int a, int b) {
     int temp = a;
     a = b;
     b = temp;
 }
+```
 
 R: Esta función intercambia las copias de los valores, pero no modifica las variables originales de main.
 
+```asm
 swapPorReferencia
 void swapPorReferencia(int &a, int &b) {
     int temp = a;
     a = b;
     b = temp;
 }
+```
 
 R: Esta función intercambia directamente los valores de las variables originales porque recibe referencias.
 
+```asm
 swapPorPuntero
 void swapPorPuntero(int *a, int *b) {
     int temp = *a;
     *a = *b;
     *b = temp;
 }
+```
 
 R: Esta función recibe las direcciones de las variables y utiliza * para acceder a sus valores y poder intercambiarlos.
 
+```asm
 Programa
 #include <iostream>
 using namespace std;
@@ -107,6 +114,7 @@ int main() {
 
     return 0;
 }
+```
 
 ### Resultados de las pruebas
 
@@ -259,6 +267,7 @@ R: Porque el arreglo fue creado utilizando new[]. delete[] es la forma correcta 
 
 ## Actividad 5
 
+```asm
 Programa en C++
 #include <iostream>
 #include <string>
@@ -309,6 +318,7 @@ int main() {
 
     return 0;
 }
+```
 
 - Explica qué ocurre al copiar un objeto en C++ y en C#. ¿Qué diferencias encuentras?
 
@@ -330,6 +340,7 @@ R: La salida muestra que el paso por valor no cambia la variable original, mient
 
 - Escribe la salida completa esperada.
 
+```asm
 --- Experimento con paso de parámetros ---
 Valor inicial de val_A: 20
   -> Dentro de sumaPorValor, 'a' ahora es: 30
@@ -347,6 +358,7 @@ Valor final de val_C: 30
   -> Llamada a ejecutarContador. Valor de contador_estatico: 1
   -> Llamada a ejecutarContador. Valor de contador_estatico: 2
   -> Llamada a ejecutarContador. Valor de contador_estatico: 3
+```
   
 - Dibuja un mapa de memoria conceptual justo antes de que main finalice.
 
