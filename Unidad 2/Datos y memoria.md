@@ -9,7 +9,7 @@ R: Los breakpoints sirven para detener la ejecución del programa en una línea 
 
 R: La ventana Autos sirve para mostrar las variables que están relacionadas con la línea de código que se está ejecutando. Permite observar sus valores y cómo van cambiando durante la depuración.
 
-##Actividad 2
+## Actividad 2
 
 - ¿Cuál es la predicción de la salida de cada función?
 
