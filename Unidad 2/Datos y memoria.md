@@ -403,3 +403,258 @@ R: Las capturas demuestran que el paso por valor trabaja con una copia y no modi
 - Explica con tus propias palabras el comportamiento de contador_estatico.
 
 R: contador_estatico conserva su valor entre las llamadas a ejecutarContador. La primera vez vale 1, la segunda 2 y la tercera 3. Esto ocurre porque es una variable estática y solamente se inicializa una vez. Una variable local normal se crearía nuevamente cada vez que se llama a la función.
+
+
+# Sesión 3
+
+## Actividad 6: Hola Objeto: creación de un objeto en el stack
+
+### Programa
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Punto {
+public:
+    int x;
+    int y;
+
+    Punto(int _x, int _y) : x(_x), y(_y) {
+        cout << "Constructor: Punto(" << x << ", " << y << ") creado." << endl;
+    }
+
+    ~Punto() {
+        cout << "Destructor: Punto(" << x << ", " << y << ") destruido." << endl;
+    }
+
+    void imprimir() {
+        cout << "Punto(" << x << ", " << y << ")" << endl;
+    }
+};
+
+int main() {
+    Punto p(10, 20);
+    p.imprimir();
+
+    return 0;
+}
+```
+
+- ¿Cuál es la diferencia entre un constructor y un destructor?
+
+R: El constructor se ejecuta cuando se crea un objeto y sirve principalmente para inicializarlo. El destructor se ejecuta cuando el objeto se destruye y sirve para liberar los recursos que pueda estar utilizando.
+
+- ¿Cuál es la diferencia entre un objeto y una clase?
+
+R: Una clase es como un molde que define las características y funciones que tendrá algo. Un objeto es una instancia creada a partir de esa clase.
+
+- ¿Cuál es la diferencia entre el Punto de C++ y el de C#?
+
+R: En C++ el objeto puede crearse directamente en el stack usando `Punto p(10, 20)`. En C# normalmente se crea usando `new`, como `Punto p = new Punto(10, 20)`, y la memoria del objeto se maneja automáticamente.
+
+- ¿Qué es `p` en C++ y qué es `p` en C#?
+
+R: En C++, `p` es un objeto de tipo `Punto`. En C#, `p` es una variable que contiene una referencia a un objeto `Punto`.
+
+- ¿Dónde se almacena `p` en C++ y en C#?
+
+R: En este ejemplo de C++, `p` se almacena directamente en el stack. En C#, la variable `p` contiene una referencia y el objeto creado con `new` se almacena en el heap.
+
+- ¿Qué mostró el debugger sobre `p`? Según esto, ¿qué es un objeto en C++?
+
+R: El debugger mostró que `p` contiene directamente los valores de sus atributos. Por ejemplo, se pueden observar los valores `10` y `20` en la memoria. Esto permite entender que un objeto en C++ es una región de memoria que contiene sus datos y sobre la que se pueden ejecutar sus funciones.
+
+### Memoria
+
+Al colocar un breakpoint en:
+
+```cpp
+Punto p(10, 20);
+```
+
+y revisar la dirección de `p` con `&p`, se puede observar en memoria cómo están guardados los valores.
+
+Los valores son:
+
+* `10` en hexadecimal = `0A`
+* `20` en hexadecimal = `14`
+
+Como Windows normalmente usa **little endian**, los bytes aparecen como:
+
+```text
+0A 00 00 00 14 00 00 00
+```
+
+Si se utilizara **big endian**, se guardarían de esta forma:
+
+```text
+00 00 00 0A 00 00 00 14
+```
+
+## Actividad 7: Objetos en el heap
+
+### Programa
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Punto {
+public:
+    int x;
+    int y;
+
+    Punto(int _x, int _y) : x(_x), y(_y) {
+        cout << "Constructor: Punto(" << x << ", " << y << ") creado." << endl;
+    }
+
+    ~Punto() {
+        cout << "Destructor: Punto(" << x << ", " << y << ") destruido." << endl;
+    }
+
+    void imprimir() {
+        cout << "Punto(" << x << ", " << y << ")" << endl;
+    }
+};
+
+int main() {
+    Punto pStack(30, 40);
+    pStack.imprimir();
+
+    Punto* pHeap = new Punto(50, 60);
+    pHeap->imprimir();
+
+    delete pHeap;
+
+    return 0;
+}
+```
+
+- ¿Cuál es la diferencia entre los objetos creados en el stack y los objetos creados en el heap?
+
+R: El objeto del stack se crea directamente y se destruye automáticamente cuando termina su alcance. El objeto del heap se crea usando `new` y debe liberarse usando `delete`.
+
+- ¿`pStack` es un objeto o una referencia?
+
+R: `pStack` es un objeto de tipo `Punto`. El objeto está almacenado directamente en el stack.
+
+- ¿`pHeap` es un objeto o una referencia? Si es una referencia, ¿a qué?
+
+R: `pHeap` es un puntero, no una referencia. Es una variable que almacena la dirección de un objeto `Punto` que está en el heap.
+
+- Al colocar un breakpoint en `&pHeap` y comparar el contenido de Memory 1 con el valor de `pHeap` en Locals, ¿qué se observa?
+
+R: Se observa que en la dirección de `pHeap` está guardado el valor de la dirección del objeto que está en el heap. Por eso el valor que aparece en Memory 1 corresponde a la dirección que muestra `pHeap` en Locals.
+
+## Actividad 8: Funciones y objetos en C++
+
+### Programa
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Punto {
+public:
+    string name;
+    int x;
+    int y;
+
+    Punto(string _name, int _x, int _y) : name(_name), x(_x), y(_y) {
+        cout << "Constructor: Punto " << name << " (" << x << ", " << y << ") creado." << endl;
+    }
+
+    ~Punto() {
+        cout << "Destructor: Punto " << name << "(" << x << ", " << y << ") destruido." << endl;
+    }
+
+    void imprimir() {
+        cout << "Punto " << name << "(" << x << ", " << y << ")" << endl;
+    }
+};
+
+void cambiarNombre(Punto p, string nuevoNombre) {
+    p.name = nuevoNombre;
+}
+
+int main() {
+    Punto original("original", 70, 80);
+
+    original.imprimir();
+
+    cambiarNombre(original, "cambiado");
+
+    original.imprimir();
+
+    return 0;
+}
+```
+
+- ¿Qué ocurre después de llamar a `cambiarNombre`? ¿Por qué el destructor dice "cambiado"?
+
+R: Cuando se llama a `cambiarNombre`, se crea una copia de `original` llamada `p`. Dentro de la función se cambia el nombre de esa copia a `"cambiado"`. Cuando termina la función, la copia `p` se destruye y por eso el destructor muestra `"cambiado"`.
+
+- ¿Por qué `original` todavía existe?
+
+R: Porque `original` y `p` son objetos diferentes. `p` es una copia de `original`, por lo que cambiar o destruir `p` no destruye `original`.
+
+- ¿Dónde están `original` y `p`? ¿Son el mismo objeto?
+
+R: Los dos son objetos locales y en este ejemplo se encuentran en el stack. No son el mismo objeto. `p` es una copia de `original`.
+
+### Pasando el objeto por referencia
+
+Se cambia la función por:
+
+```cpp
+void cambiarNombre(Punto& p, string nuevoNombre) {
+    p.name = nuevoNombre;
+}
+```
+
+- ¿Qué ocurre ahora y por qué?
+
+R: Ahora sí se cambia el nombre de `original`. Esto pasa porque `p` es una referencia al mismo objeto `original`, por lo que no se crea una copia.
+
+- ¿Qué pasa con el destructor?
+
+R: El destructor de la copia ya no aparece porque no se crea una copia. El destructor de `original` se ejecuta cuando `original` sale de su alcance al terminar `main`.
+
+### Pasando el objeto por puntero
+
+Se cambia la función por:
+
+```cpp
+void cambiarNombre(Punto* p, string nuevoNombre) {
+    p->name = nuevoNombre;
+}
+
+int main() {
+    Punto original("original", 70, 80);
+
+    original.imprimir();
+
+    cambiarNombre(&original, "cambiado");
+
+    original.imprimir();
+
+    return 0;
+}
+```
+
+- ¿Qué ocurre ahora y por qué?
+
+R: Ahora también se cambia el nombre de `original`. Se envía su dirección usando `&original` y el puntero `p` recibe esa dirección. Con `p->name` se puede modificar el objeto original.
+
+- ¿Cuál es la diferencia entre pasar un objeto por valor, referencia y puntero?
+
+R: Al pasar por valor se crea una copia del objeto, por lo que los cambios no afectan al original. Al pasar por referencia se trabaja directamente con el objeto original. Al pasar por puntero se envía la dirección del objeto y también se puede modificar el original usando `->`.
+
+R: En resumen:
+
+* **Por valor:** se crea una copia.
+* **Por referencia:** se trabaja directamente con el objeto original.
+* **Por puntero:** se pasa la dirección del objeto original.
+
