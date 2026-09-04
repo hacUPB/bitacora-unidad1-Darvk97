@@ -177,6 +177,7 @@ R: El texto del mensaje se encuentra en una zona de memoria de solo lectura, mie
 
 ## Mapa de memoria
 
+```asm
 +--------------------------------+
 |        SEGMENTO DE CÓDIGO      |
 |                                |
@@ -206,6 +207,7 @@ R: El texto del mensaje se encuentra en una zona de memoria de solo lectura, mie
 | arrayHeap (puntero)            |
 | variables locales              |
 +--------------------------------+
+```
 
 ## Actividad 4
 
@@ -362,6 +364,7 @@ Valor final de val_C: 30
   
 - Dibuja un mapa de memoria conceptual justo antes de que main finalice.
 
+```asm
 +--------------------------------+
 |        SEGMENTO DE CÓDIGO      |
 |                                |
@@ -387,6 +390,7 @@ Valor final de val_C: 30
 | val_C = 30                     |
 | parámetros de las funciones    |
 +--------------------------------+
+```
 
 - Compara la salida real con tu predicción.
 
