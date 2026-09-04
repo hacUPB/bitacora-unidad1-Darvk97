@@ -654,7 +654,215 @@ R: Al pasar por valor se crea una copia del objeto, por lo que los cambios no af
 
 R: En resumen:
 
-* **Por valor:** se crea una copia.
-* **Por referencia:** se trabaja directamente con el objeto original.
-* **Por puntero:** se pasa la dirección del objeto original.
+- Por valor: se crea una copia.
+- Por referencia: se trabaja directamente con el objeto original.
+- Por puntero: se pasa la dirección del objeto original.
 
+# Sesión 4
+
+## Actividad 9: Variables estáticas
+
+### Programa
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void contador() {
+    static int cantidad = 0;
+    cantidad++;
+
+    cout << "Cantidad: " << cantidad << endl;
+}
+
+int main() {
+    contador();
+    contador();
+    contador();
+
+    return 0;
+}
+```
+
+- ¿Qué ocurre con la variable `cantidad` cada vez que se llama a la función?
+
+R: La variable `cantidad` aumenta cada vez que se llama a la función. Esto ocurre porque es una variable `static` y conserva su valor entre las diferentes llamadas.
+
+- ¿Cuál es la diferencia entre una variable normal y una variable `static` dentro de una función?
+
+R: Una variable normal se crea cada vez que se entra a la función y se pierde cuando termina. Una variable `static` conserva su valor aunque la función termine y vuelva a ser llamada.
+
+- ¿Cuántas veces se crea la variable `cantidad`?
+
+R: La variable `cantidad` se crea una sola vez. Después solamente se utiliza y se modifica su valor.
+
+- ¿Qué valores se muestran en pantalla?
+
+R: Se muestran los valores:
+
+```text
+Cantidad: 1
+Cantidad: 2
+Cantidad: 3
+```
+
+- ¿Dónde se almacena una variable `static`?
+
+R: Una variable `static` tiene una duración que permanece durante toda la ejecución del programa. No se comporta como una variable local normal del stack, sino que se almacena en una zona de memoria destinada a variables estáticas.
+
+## Actividad 10: Comparación de memoria entre objetos
+
+### Programa
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Punto {
+public:
+    int x;
+    int y;
+
+    Punto(int _x, int _y) : x(_x), y(_y) {
+        cout << "Constructor: Punto(" << x << ", " << y << ") creado." << endl;
+    }
+
+    ~Punto() {
+        cout << "Destructor: Punto(" << x << ", " << y << ") destruido." << endl;
+    }
+
+    void imprimir() {
+        cout << "Punto(" << x << ", " << y << ")" << endl;
+    }
+};
+
+int main() {
+    Punto p1(10, 20);
+    Punto p2(30, 40);
+
+    Punto* p3 = new Punto(50, 60);
+
+    p1.imprimir();
+    p2.imprimir();
+    p3->imprimir();
+
+    delete p3;
+
+    return 0;
+}
+```
+
+- ¿Cuántos objetos se crean en el programa?
+
+R: Se crean tres objetos `Punto`: `p1`, `p2` y `p3`.
+
+- ¿Dónde se encuentra cada objeto?
+
+R: `p1` y `p2` son objetos creados directamente en el stack. `p3` es un puntero que está en el stack, pero apunta a un objeto `Punto` que fue creado en el heap.
+
+- ¿Cuál es la diferencia entre `p1` y `p3`?
+
+R: `p1` es directamente un objeto, mientras que `p3` es un puntero que guarda la dirección de un objeto que está en el heap.
+
+- ¿Qué sucede cuando se ejecuta `delete p3`?
+
+R: Se destruye el objeto que está en el heap y se libera la memoria que estaba utilizando.
+
+- ¿Qué pasaría si no se utilizara `delete p3`?
+
+R: La memoria del objeto creado con `new` no se liberaría correctamente mientras el programa sigue ejecutándose. Esto puede producir una fuga de memoria o memory leak.
+
+- ¿Qué diferencia hay entre `p3` y `*p3`?
+
+R: `p3` es el puntero que contiene una dirección de memoria. `*p3` representa el objeto que se encuentra en esa dirección.
+
+
+## Integración de aplicación
+
+### Programa
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Punto {
+public:
+    int x;
+    int y;
+
+    Punto(int _x, int _y) : x(_x), y(_y) {
+        cout << "Constructor: Punto(" << x << ", " << y << ") creado." << endl;
+    }
+
+    ~Punto() {
+        cout << "Destructor: Punto(" << x << ", " << y << ") destruido." << endl;
+    }
+
+    void mover(int dx, int dy) {
+        x += dx;
+        y += dy;
+    }
+
+    void imprimir() {
+        cout << "Punto(" << x << ", " << y << ")" << endl;
+    }
+};
+
+void moverPunto(Punto& p, int dx, int dy) {
+    p.mover(dx, dy);
+}
+
+int main() {
+    Punto p1(10, 20);
+
+    p1.imprimir();
+
+    moverPunto(p1, 5, 10);
+
+    p1.imprimir();
+
+    Punto* p2 = new Punto(30, 40);
+
+    p2->imprimir();
+
+    moverPunto(*p2, 10, 5);
+
+    p2->imprimir();
+
+    delete p2;
+
+    return 0;
+}
+```
+
+- ¿Qué conceptos de memoria se aplican en este programa?
+
+R: Se utilizan objetos en el stack, objetos en el heap, punteros, referencias, constructores y destructores.
+
+- ¿Dónde se encuentra `p1`?
+
+R: `p1` es un objeto creado directamente en el stack.
+
+- ¿Dónde se encuentra `p2`?
+
+R: `p2` es un puntero que está en el stack, pero apunta a un objeto que está en el heap.
+
+- ¿Qué hace la función `moverPunto`?
+
+R: La función recibe una referencia a un objeto `Punto` y modifica directamente sus coordenadas.
+
+- ¿Por qué `moverPunto` utiliza `Punto&`?
+
+R: Porque de esta forma no se crea una copia del objeto y se puede modificar directamente el objeto original.
+
+- ¿Qué significa `*p2` cuando se llama a `moverPunto`?
+
+R: `*p2` significa acceder al objeto al que apunta el puntero `p2`. De esta forma la función recibe el objeto por referencia.
+
+- ¿Por qué se utiliza `delete p2`?
+
+R: Porque el objeto fue creado utilizando `new`, así que se debe utilizar `delete` para liberar la memoria del heap cuando ya no se necesita.
+
+- ¿Qué se aprendió con esta actividad?
+
+R: Aprendí que en C++ es importante entender dónde se almacenan los objetos y cómo se maneja la memoria. También aprendí la diferencia entre pasar objetos por valor, referencia y puntero, y que cuando se utiliza `new` se debe liberar la memoria con `delete`.
