@@ -121,6 +121,7 @@ R//: La vtable es una tabla de punteros a funciones virtuales. Gracias a ella el
 
 # Actividad 4
 
+```asm
 class AccessControl {
 private:
 		int privateVar;
@@ -140,11 +141,14 @@ int main() {
 		// Error de compilación
 		return 0;
 		}
+```
 
 Al descomentar:
 
+```asm
 ac.protectedVar = 20;
 ac.privateVar = 30;
+```
 
 el programa no compila.
 
@@ -154,7 +158,7 @@ R//: Porque protected solo puede accederse desde clases hijas y private únicame
 Conclusión
 R//: El encapsulamiento es una protección aplicada por el compilador antes de ejecutar el programa.
 
-
+```asm
 #include <iostream>
 class MyClass {
 private:
@@ -178,14 +182,16 @@ int main() {
     // Método público para mostrar los valores
     return 0;
     }
+```
 
 el programa imprime:
 
+```asm
 secret1: 42
 secret2: 3.14
 secret3: A
-
-
+```
+```asm
 #include <iostream>
 class MyClass {
 private:
@@ -216,6 +222,7 @@ int main() {
     // Accede a secret3
     return 0;
     }
+```
 
 Conclusión
 R//:Aunque el compilador impide acceder a miembros privados, en memoria esos datos siguen existiendo. Por eso el encapsulamiento es una protección de acceso al código, no un cifrado de la memoria.
@@ -245,6 +252,7 @@ R//: C++ coloca primero los datos de la clase base y luego los de la clase hija 
 C++ permite hacer algo que C# no: herencia múltiple. Realiza un experimento que te permita ver cómo se objeto en memoria cuya clase base tiene herencia múltiple.
 R//: 
 
+```asm
 class A{
 public:int a;
 };
@@ -256,6 +264,7 @@ public:int b;
 class C : public A, public B{
 public:int c;
 };
+```
 
 La herencia múltiple incorpora primero la memoria de cada clase base y luego los datos de la clase derivada.
 
