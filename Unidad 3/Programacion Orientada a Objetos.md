@@ -473,7 +473,9 @@ R//: Agregué dos nuevas partículas llamadas ZigZagParticle y SpiralParticle, l
 
 ### 2. ¿Cómo y por qué de la implementación de los conceptos de encapsulamiento, herencia y polimorfismo en tu código?
 
-R//: El encapsulamiento se mantiene porque los atributos de las partículas permanecen protegidos dentro de las clases. La herencia permitió reutilizar el código de RisingParticle y ExplosionParticle para crear nuevos comportamientos sin duplicar lógica. El polimorfismo se evidencia porque todas las partículas se almacenan como Particle* y cada una ejecuta su propio update() y draw().
+R//: - El encapsulamiento se mantiene porque los atributos de las partículas permanecen protegidos dentro de las clases. 
+- La herencia permitió reutilizar el código de RisingParticle y ExplosionParticle para crear nuevos comportamientos sin duplicar lógica. 
+- El polimorfismo se evidencia porque todas las partículas se almacenan como Particle* y cada una ejecuta su propio update() y draw().
 
 ### 3. Explica cómo verificaste que cada una de las extensiones funciona correctamente, muestra capturas de pantalla del depurador donde evidencias lo anterior, en particular el polimorfismo en tiempo de ejecución.
 
