@@ -235,7 +235,9 @@ R//: Es el principio que protege el estado interno de los objetos mediante modif
 # Actividad 5
 
 captura de nuevo la memoria que ocupa el objeto CircularExplosion compara la jerarquía de clases con los campos en memoria del objeto. ¿Qué puedes observar? ¿Qué información te proporciona el depurador? ¿Qué puedes concluir?
-R//: 1. Captura: 
+R//:
+
+1. Captura: 
 
 2. Los campos aparecen en este orden:
 - _vtable
@@ -277,3 +279,177 @@ La herencia múltiple incorpora primero la memoria de cada clase base y luego lo
 ¿Qué relación existe entre métodos virtuales y polimorfismo?
 R//: Los métodos virtuales hacen posible el polimorfismo. La vtable guarda las direcciones de las funciones y, cuando un puntero de tipo Particle llama update(), el programa consulta esa tabla para ejecutar la implementación correcta del objeto real.
 
+# Actividad 7
+
+1. Agrega dos nuevos tipos de Particle diferentes a RisingParticle.
+R//:
+
+createRisingParticle() (ofApp.cpp)
+
+```asm
+void ofApp::createRisingParticle() {
+
+    float minX = ofGetWidth() * 0.35;
+    float maxX = ofGetWidth() * 0.65;
+    float spawnX = ofRandom(minX, maxX);
+
+    glm::vec2 pos(spawnX, ofGetHeight());
+
+    glm::vec2 target(
+        ofGetWidth()/2 + ofRandom(-300,300),
+        ofGetHeight()*0.10 + ofRandom(-30,30));
+
+    glm::vec2 direction = glm::normalize(target - pos);
+    glm::vec2 vel = direction * ofRandom(250,350);
+
+    ofColor col;
+    col.setHsb(ofRandom(255),220,255);
+
+    float lifetime = ofRandom(1.5,3.5);
+
+    int type = (int)ofRandom(3);
+
+    if(type == 0)
+        particles.push_back(new RisingParticle(pos, vel, col, lifetime));
+    else if(type == 1)
+        particles.push_back(new ZigZagParticle(pos, vel, col, lifetime));
+    else
+        particles.push_back(new SpiralParticle(pos, vel, col, lifetime));
+}
+```
+
+update() (ofApp.cpp)
+
+```asm
+void ofApp::update() {
+
+    float dt = ofGetLastFrameTime();
+
+    for(int i=0;i<particles.size();i++)
+        particles[i]->update(dt);
+
+    for(int i=particles.size()-1;i>=0;i--){
+
+        if(particles[i]->shouldExplode()){
+
+            int explosionType = (int)ofRandom(4);
+            int numParticles = (int)ofRandom(20,30);
+
+            for(int j=0;j<numParticles;j++){
+
+                if(explosionType==0)
+                    particles.push_back(new CircularExplosion(
+                        particles[i]->getPosition(),
+                        particles[i]->getColor()));
+
+                else if(explosionType==1)
+                    particles.push_back(new RandomExplosion(
+                        particles[i]->getPosition(),
+                        particles[i]->getColor()));
+
+                else if(explosionType==2)
+                    particles.push_back(new StarExplosion(
+                        particles[i]->getPosition(),
+                        particles[i]->getColor()));
+
+                else
+                    particles.push_back(new FireworkExplosion(
+                        particles[i]->getPosition(),
+                        particles[i]->getColor()));
+            }
+
+            delete particles[i];
+            particles.erase(particles.begin()+i);
+        }
+        else if(particles[i]->isDead()){
+            delete particles[i];
+            particles.erase(particles.begin()+i);
+        }
+    }
+}
+```
+
+ZigZagParticle (ofApp.h):
+
+```asm
+class ZigZagParticle : public RisingParticle {
+public:
+    ZigZagParticle(const glm::vec2& pos,
+        const glm::vec2& vel,
+        const ofColor& col,
+        float life)
+        : RisingParticle(pos, vel, col, life) {
+    }
+
+    void update(float dt) override {
+        RisingParticle::update(dt);
+        position.x += sin(age * 10.0f) * 120.0f * dt;
+    }
+
+    void draw() override {
+        ofSetColor(color);
+        ofDrawCircle(position, 8);
+    }
+};
+```
+
+SpiralParticle (ofApp.h):
+
+```asm
+class SpiralParticle : public RisingParticle {
+public:
+    SpiralParticle(const glm::vec2& pos,
+        const glm::vec2& vel,
+        const ofColor& col,
+        float life)
+        : RisingParticle(pos, vel, col, life) {
+    }
+
+    void update(float dt) override {
+        RisingParticle::update(dt);
+        position.x += cos(age * 12.0f) * 80.0f * dt;
+        position.y += sin(age * 12.0f) * 30.0f * dt;
+    }
+
+    void draw() override {
+        ofSetColor(color);
+        ofDrawCircle(position, 8);
+    }
+};
+```
+
+2. Implementar un nuevo modo de explosión.
+R//:
+
+FireworkExplosion (ofApp.h)
+
+```asm
+class FireworkExplosion : public ExplosionParticle {
+public:
+    FireworkExplosion(const glm::vec2& pos, const ofColor& col)
+        : ExplosionParticle(pos, glm::vec2(0, 0), col, 2.0f, ofRandom(4, 8)) {
+
+        float angle = ofRandom(0, TWO_PI);
+        float speed = ofRandom(140, 260);
+
+        velocity = glm::vec2(cos(angle), sin(angle)) * speed;
+    }
+
+    void update(float dt) override {
+        position += velocity * dt;
+
+        velocity *= 0.99f;
+        velocity.y += 140 * dt;
+
+        age += dt;
+
+        float alpha = ofMap(age, 0, lifetime, 255, 0, true);
+        color.a = alpha;
+    }
+
+    void draw() override {
+        ofSetColor(color);
+        ofDrawCircle(position, size);
+    }
+};
+```
