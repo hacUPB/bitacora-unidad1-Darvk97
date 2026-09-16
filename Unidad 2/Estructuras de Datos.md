@@ -2,6 +2,7 @@
 
 ## ofApp.h
 
+```asm
 #pragma once
 #include "ofMain.h"
 
@@ -114,3 +115,90 @@ public:
     void draw();
     void keyPressed(int key);
 };
+```
+
+## ofApp.cpp 
+
+```asm
+#include "ofApp.h"
+
+//--------------------------------------------------------------
+void ofApp::setup() {
+
+    ofSetFrameRate(60);
+    ofEnableAlphaBlending();
+}
+
+//--------------------------------------------------------------
+void ofApp::update() {
+
+    backgroundHue += 0.2;
+
+    if (backgroundHue > 255)
+        backgroundHue = 0;
+
+    // Pintar mientras se mantiene el click 
+    if (ofGetMousePressed()) {
+
+        float r = ofRandom(8, 22);
+
+        ofColor c;
+        c.setHsb(ofRandom(255), 220, 255);
+
+        strokes.enqueue(ofGetMouseX(),
+                        ofGetMouseY(),
+                        r,
+                        c,
+                        255);
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::draw() {
+
+    // Fondo
+    ofColor c1, c2;
+
+    c1.setHsb(backgroundHue, 150, 240);
+    c2.setHsb(fmod(backgroundHue + 128, 255), 150, 240);
+
+    ofBackgroundGradient(c1, c2, OF_GRADIENT_LINEAR);
+
+    // Dibujar los trazos
+    Node* actual = strokes.front;
+
+    while (actual != nullptr) {
+
+        // Los más antiguos son más claritos
+        float alpha = ofMap(actual->opacity, 0, 255, 40, 255);
+
+        ofSetColor(actual->color, alpha);
+        ofDrawCircle(actual->x, actual->y, actual->radius);
+
+        actual = actual->next;
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::keyPressed(int key) {
+
+    // Limpiar pantalla
+    if (key == 'c') {
+        strokes.clear();
+    }
+
+    // Alternar 50 y 100
+    if (key == 'a') {
+
+        if (strokes.maxSize == 50)
+            strokes.maxSize = 100;
+        else
+            strokes.maxSize = 50;
+    }
+
+    // Guardar captura
+    else if (key == 's') {
+        ofSaveScreen("captura_" + ofGetTimestampString() + ".png");
+    }
+}
+```
