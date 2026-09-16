@@ -79,19 +79,23 @@ R//: La aplicación simula un espectáculo de fuegos artificiales utilizando pro
 # Actividad 3.
 
 Hipótesis
+
 R//: Esperaba encontrar un objeto ofApp que almacenara principalmente el vector particles y los datos heredados de ofBaseApp.
 
 Captura: Objeto ofApp en Autos/Locals.
 
 Observación
+
 R//: El depurador muestra que ofApp contiene un std::vector<Particle*>, donde cada elemento es un puntero a un objeto diferente. También aparecen los datos heredados de la clase base.
 
 Captura: Objeto CircularExplosion en Memory 1.
 
 Observación
+
 R//: El objeto aparece como un único bloque de memoria. Dentro de él primero aparece la parte correspondiente a Particle, luego ExplosionParticle y finalmente los datos propios de CircularExplosion.
 
 Conclusiónes
+
 R//: La herencia no crea varios objetos separados; todos los datos se almacenan dentro del mismo objeto siguiendo la jerarquía de clases.
 La vtable
 
@@ -153,9 +157,11 @@ ac.privateVar = 30;
 el programa no compila.
 
 ¿Por qué?
+
 R//: Porque protected solo puede accederse desde clases hijas y private únicamente desde la propia clase.
 
 Conclusión
+
 R//: El encapsulamiento es una protección aplicada por el compilador antes de ejecutar el programa.
 
 ```asm
@@ -227,14 +233,17 @@ int main() {
 ```
 
 Conclusión
+
 R//:Aunque el compilador impide acceder a miembros privados, en memoria esos datos siguen existiendo. Por eso el encapsulamiento es una protección de acceso al código, no un cifrado de la memoria.
 
 ¿Qué es el encapsulamiento?
+
 R//: Es el principio que protege el estado interno de los objetos mediante modificadores de acceso (private, protected y public). Es importante porque evita modificaciones indebidas y hace el código más seguro y mantenible.
 
 # Actividad 5
 
 captura de nuevo la memoria que ocupa el objeto CircularExplosion compara la jerarquía de clases con los campos en memoria del objeto. ¿Qué puedes observar? ¿Qué información te proporciona el depurador? ¿Qué puedes concluir?
+
 R//:
 
 1. Captura: 
@@ -251,9 +260,11 @@ R//:
 3. conclusion: Cada clase agrega sus propios atributos al final del bloque heredado.
 
 ¿Cómo se implementa la herencia en C++?
+
 R//: C++ coloca primero los datos de la clase base y luego los de la clase hija dentro del mismo objeto. Así un puntero a Particle puede apuntar correctamente a un CircularExplosion.
 
 C++ permite hacer algo que C# no: herencia múltiple. Realiza un experimento que te permita ver cómo se objeto en memoria cuya clase base tiene herencia múltiple.
+
 R//: 
 
 ```asm
@@ -277,11 +288,13 @@ La herencia múltiple incorpora primero la memoria de cada clase base y luego lo
 <img width="720" height="489" alt="image" src="https://github.com/user-attachments/assets/1ab0d493-aad7-4082-862d-b561e0433b28" />
 
 ¿Qué relación existe entre métodos virtuales y polimorfismo?
+
 R//: Los métodos virtuales hacen posible el polimorfismo. La vtable guarda las direcciones de las funciones y, cuando un puntero de tipo Particle llama update(), el programa consulta esa tabla para ejecutar la implementación correcta del objeto real.
 
 # Actividad 7
 
 1. Agrega dos nuevos tipos de Particle diferentes a RisingParticle.
+
 R//:
 
 createRisingParticle() (ofApp.cpp)
@@ -419,6 +432,7 @@ public:
 ```
 
 2. Implementar un nuevo modo de explosión.
+
 R//:
 
 FireworkExplosion (ofApp.h)
