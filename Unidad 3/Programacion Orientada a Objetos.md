@@ -478,3 +478,5 @@ R//: El encapsulamiento se mantiene porque los atributos de las partículas perm
 ### 3. Explica cómo verificaste que cada una de las extensiones funciona correctamente, muestra capturas de pantalla del depurador donde evidencias lo anterior, en particular el polimorfismo en tiempo de ejecución.
 
 R//: Ejecuté la aplicación y comprobé que aparecieran las nuevas trayectorias en zigzag y espiral, además del nuevo tipo de explosión con efecto de fuego artificial. En el depurador verifiqué que los objetos del vector particles llamaran al método correspondiente según su tipo, confirmando el polimorfismo en tiempo de ejecución.
+
+Capturas: 
