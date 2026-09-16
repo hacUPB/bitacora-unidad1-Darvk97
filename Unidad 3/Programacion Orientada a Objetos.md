@@ -191,6 +191,8 @@ secret1: 42
 secret2: 3.14
 secret3: A
 ```
+Compila el programa y ejecuta. 
+
 ```asm
 #include <iostream>
 class MyClass {
