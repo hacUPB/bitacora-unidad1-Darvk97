@@ -466,3 +466,15 @@ public:
     }
 };
 ```
+
+### 1. ¿Cómo y por qué de la implementación de cada una de las extensiones solicitadas al caso de estudio?
+
+R//: Agregué dos nuevas partículas llamadas ZigZagParticle y SpiralParticle, las cuales heredan de RisingParticle y cambian únicamente su trayectoria de movimiento. También implementé FireworkExplosion, un nuevo modo de explosión que genera partículas radiales con gravedad para simular un fuego artificial tradicional.
+
+### 2. ¿Cómo y por qué de la implementación de los conceptos de encapsulamiento, herencia y polimorfismo en tu código?
+
+R//: El encapsulamiento se mantiene porque los atributos de las partículas permanecen protegidos dentro de las clases. La herencia permitió reutilizar el código de RisingParticle y ExplosionParticle para crear nuevos comportamientos sin duplicar lógica. El polimorfismo se evidencia porque todas las partículas se almacenan como Particle* y cada una ejecuta su propio update() y draw().
+
+### 3. Explica cómo verificaste que cada una de las extensiones funciona correctamente, muestra capturas de pantalla del depurador donde evidencias lo anterior, en particular el polimorfismo en tiempo de ejecución.
+
+R//: Ejecuté la aplicación y comprobé que aparecieran las nuevas trayectorias en zigzag y espiral, además del nuevo tipo de explosión con efecto de fuego artificial. En el depurador verifiqué que los objetos del vector particles llamaran al método correspondiente según su tipo, confirmando el polimorfismo en tiempo de ejecución.
