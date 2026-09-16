@@ -287,6 +287,7 @@ La herencia múltiple incorpora primero la memoria de cada clase base y luego lo
 
 <img width="720" height="489" alt="image" src="https://github.com/user-attachments/assets/1ab0d493-aad7-4082-862d-b561e0433b28" />
 
+
 ¿Qué relación existe entre métodos virtuales y polimorfismo?
 
 R//: Los métodos virtuales hacen posible el polimorfismo. La vtable guarda las direcciones de las funciones y, cuando un puntero de tipo Particle llama update(), el programa consulta esa tabla para ejecutar la implementación correcta del objeto real.
