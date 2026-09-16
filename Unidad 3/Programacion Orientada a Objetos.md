@@ -469,7 +469,7 @@ public:
 
 ### 1. ¿Cómo y por qué de la implementación de cada una de las extensiones solicitadas al caso de estudio?
 
-R//: Agregué dos nuevas partículas llamadas ZigZagParticle y SpiralParticle, las cuales heredan de RisingParticle y cambian únicamente su trayectoria de movimiento. También implementé FireworkExplosion, un nuevo modo de explosión que genera partículas radiales con gravedad para simular un fuego artificial tradicional.
+R//: Agregué dos nuevas partículas llamadas ZigZagParticle y SpiralParticle, las cuales heredan de RisingParticle y cambian únicamente su trayectoria de movimiento. También implementé FireworkExplosion, un nuevo modo de explosión que genera partículas radiales con gravedad para simular a polvora.
 
 ### 2. ¿Cómo y por qué de la implementación de los conceptos de encapsulamiento, herencia y polimorfismo en tu código?
 
