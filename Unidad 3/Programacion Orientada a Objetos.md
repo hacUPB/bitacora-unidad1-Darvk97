@@ -294,11 +294,9 @@ R//: Los métodos virtuales hacen posible el polimorfismo. La vtable guarda las 
 
 # Actividad 7
 
-1. Agrega dos nuevos tipos de Particle diferentes a RisingParticle.
+### 1. Agrega dos nuevos tipos de Particle diferentes a RisingParticle.
 
-R//:
-
-createRisingParticle() (ofApp.cpp)
+R//: createRisingParticle() (ofApp.cpp)
 
 ```asm
 void ofApp::createRisingParticle() {
@@ -432,7 +430,7 @@ public:
 };
 ```
 
-2. Implementar un nuevo modo de explosión.
+### 2. Implementar un nuevo modo de explosión.
 
 R//:
 
