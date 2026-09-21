@@ -866,3 +866,92 @@ R: Porque el objeto fue creado utilizando `new`, así que se debe utilizar `dele
 - ¿Qué se aprendió con esta actividad?
 
 R: Aprendí que en C++ es importante entender dónde se almacenan los objetos y cómo se maneja la memoria. También aprendí la diferencia entre pasar objetos por valor, referencia y puntero, y que cuando se utiliza `new` se debe liberar la memoria con `delete`.
+
+## Tarea
+
+### 1. Diagnóstico del Problema (Análisis)
+
+Al revisar, compilar y analizar la clase Personaje junto con la función simularEncuentro(), identificó los siguientes errores críticos en la gestión de memoria dinámica:
+
+Error 1: Fuga de memoria (Memory Leak)
+
+¿Cuál es el error?
+R//: El constructor de la clase asigna memoria dinámica para el arreglo estadisticas utilizando new int[3], pero la clase no cuenta con un destructor que libere esa memoria antes de destruir el objeto.
+
+¿Por qué ocurre a nivel de memoria?
+R//: Al ejecutar new int[3], el sistema reserva espacio en el Heap y guarda la dirección resultante en el puntero estadisticas (almacenado en la pila/Stack). Cuando las variables heroe y copiaHeroe salen de alcance al terminar simularEncuentro(), sus miembros en el Stack se eliminan, pero la dirección del Heap no se libera mediante delete[]. Esa memoria queda inaccesible pero ocupada.
+
+¿Cuál es su consecuencia?
+R//: Cada vez que un personaje entra y sale de contexto en el juego, se pierden 12 bytes de RAM. A medida que el programa continúe ejecutándose y cree/elimine NPCs, la memoria utilizada crecerá progresivamente hasta provocar lentitud, congelamientos o el colapso total del juego.
+
+Error 2: Copia superficial (Shallow Copy)
+¿Cuál es el error?
+R//: En la instrucción Personaje copiaHeroe = heroe;, el programa utiliza el constructor de copia por defecto generado por el compilador, el cual realiza un copiado bit a bit de las propiedades.
+
+¿Por qué ocurre a nivel de memoria?
+R//: Al copiar campo por campo, la variable copiaHeroe.estadisticas recibe exactamente la misma dirección de memoria que heroe.estadisticas. Ambos punteros terminan apuntando al mismo bloque de memoria en el Heap.
+
+¿Cuál es su consecuencia?
+R//: Si modificamos los valores de copiaHeroe, alteraremos de forma involuntaria los valores de heroe. Además, si se añadiera un destructor ingenuo con delete[], al finalizar la función se intentaría liberar dos veces la misma dirección de memoria (double free), provocando que el programa termine abruptamente con un crash (segmentation fault).
+
+### 2. Solución y refactorización (síntesis y creación):
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+
+class Personaje {
+public:
+    std::string nombre;
+    std::vector<int> estadisticas; // Reemplazo de puntero crudo por contenedor de la STL
+
+    // Constructor refactorizado con lista de inicialización
+    Personaje(std::string n, int vida, int ataque, int defensa)
+        : nombre(n), estadisticas{vida, ataque, defensa} {
+        std::cout << "Constructor: nace " << nombre << std::endl;
+    }
+
+    // Método para imprimir la información del personaje
+    void imprimir() const {
+        std::cout << "Personaje " << nombre 
+                  << " [Vida: " << estadisticas[0] 
+                  << ", ATK: " << estadisticas[1] 
+                  << ", DEF: " << estadisticas[2] << "]" << std::endl;
+    }
+};
+
+void simularEncuentro() {
+    std::cout << "\n--- Iniciando encuentro ---" << std::endl;
+    Personaje heroe("Aragorn", 100, 20, 15);
+    
+    // Genera una copia profunda (Deep Copy) automática y segura
+    Personaje copiaHeroe = heroe;
+    copiaHeroe.nombre = "Copia de Aragorn";
+
+    heroe.imprimir();
+    copiaHeroe.imprimir();
+
+    std::cout << "Saliendo del encuentro..." << std::endl;
+}
+
+int main() {
+    simularEncuentro();
+    std::cout << "\nSimulación terminada." << std::endl;
+    return 0;
+}
+```
+
+### 3. Justificación de la Solución:
+
+1. Uso de std::vector y principio RAII:
+
+Al cambiar el puntero int* por std::vector<int>, le dejamos la gestión de memoria a la librería estándar de C++. Cuando el personaje sale de alcance y se destruye, el vector libera automáticamente la memoria en el Heap. Con esto eliminamos las fugas de memoria de forma limpia y sin tener que escribir un destructor manual.
+
+2. Copia profunda automática:
+
+A diferencia de un puntero crudo, cuando duplicamos un std::vector se realiza una copia profunda automática. Esto significa que copiaHeroe recibe su propio bloque de memoria independiente en el Heap. Así nos aseguramos de que no se sobrescriban los datos del héroe original ni ocurran errores de doble liberación (double free).
+
+3. Aplicación de C++ moderno:
+
+Al apoyarnos en componentes seguros de la librería estándar (std::string y std::vector), no hace falta implementar constructores de copia ni destructores complejos a mano. La clase queda mucho más corta, legible y completamente protegida contra fallos de memoria.
