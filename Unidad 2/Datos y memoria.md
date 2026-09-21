@@ -951,7 +951,3 @@ Al cambiar el puntero int* por std::vector<int>, le dejamos la gestión de memor
 2. Copia profunda automática:
 
 A diferencia de un puntero crudo, cuando duplicamos un std::vector se realiza una copia profunda automática. Esto significa que copiaHeroe recibe su propio bloque de memoria independiente en el Heap. Así nos aseguramos de que no se sobrescriban los datos del héroe original ni ocurran errores de doble liberación (double free).
-
-3. Aplicación de C++ moderno:
-
-Al apoyarnos en componentes seguros de la librería estándar (std::string y std::vector), no hace falta implementar constructores de copia ni destructores complejos a mano. La clase queda mucho más corta, legible y completamente protegida contra fallos de memoria.
