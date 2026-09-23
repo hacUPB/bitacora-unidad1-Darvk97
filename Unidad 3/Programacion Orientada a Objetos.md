@@ -1083,17 +1083,26 @@ ofApp::~ofApp() {
 
 ### 1. ¿Cómo y por qué de la implementación de cada una de las extensiones solicitadas al caso de estudio?
 
-R//: Agregué dos nuevas partículas llamadas ZigZagParticle y SpiralParticle, las cuales heredan de RisingParticle y cambian únicamente su trayectoria de movimiento. También implementé FireworkExplosion, un nuevo modo de explosión que genera partículas radiales con gravedad para simular a polvora.
+R//: agregué la clase FallingParticle y el método createFallingParticle() porque el código base solo lanzaba fuegos artificiales desde la base y quería simular una caída descendente. Hice que la partícula nazca en la parte superior ($y = 0$) y en su método update() apliqué gravedad hacia abajo ($+y$), haciendo que explote cuando su posición vertical alcanza el límite fijado (position.y >= explosionThreshold). tambien creé los métodos createLeftFallingParticle() y createRightFallingParticle() para lanzar partículas desde los esquinas superiores (al 15% y 85% del ancho respectivamente) con velocidad diagonal hacia el centro, logrando trayectorias cruzadas y un espectáculo visual más dinámico.
 
 ### 2. ¿Cómo y por qué de la implementación de los conceptos de encapsulamiento, herencia y polimorfismo en tu código?
 
 R//: 
-- El encapsulamiento se mantiene porque los atributos de las partículas permanecen protegidos dentro de las clases. 
-- La herencia permitió reutilizar el código de RisingParticle y ExplosionParticle para crear nuevos comportamientos sin duplicar lógica. 
-- El polimorfismo se evidencia porque todas las partículas se almacenan como Particle* y cada una ejecuta su propio update() y draw().
+- El encapsulamiento protege los atributos como position, velocity y exploded dentro de FallingParticle con acceso protected/private, evitando que ofApp modifique la física interna y permitiendo su lectura solo con getters públicos como getPosition().
+- La herencia hace que FallingParticle derive de la clase base Particle (class FallingParticle : public Particle), reutilizando su estructura común sin duplicar código y lo miso con createLeftFallingParticle() y createRightFallingParticle().
+- El polimorfismo sobrescribe los métodos virtuales update() y draw() con override. Esto me permitió guardar todas las partículas en un solo vector (vector<Particle*> particles) y procesarlas en un mismo bucle, dejando que el programa determine en tiempo de ejecución (mediante la VTable) qué método ejecutar según la partícula.
 
 ### 3. Explica cómo verificaste que cada una de las extensiones funciona correctamente, muestra capturas de pantalla del depurador donde evidencias lo anterior, en particular el polimorfismo en tiempo de ejecución.
 
-R//: Ejecuté la aplicación y comprobé que aparecieran las nuevas trayectorias en zigzag y espiral, además del nuevo tipo de explosión con efecto de fuego artificial. En el depurador verifiqué que los objetos del vector particles llamaran al método correspondiente según su tipo, confirmando el polimorfismo en tiempo de ejecución.
+R//: Verifiqué el funcionamiento probando el programa de forma interactiva con las teclas asignadas ('s' y 'w' para caída central y 'a' y 'd' para laterales), confirmando que nacían arriba y explotaban a la altura correcta. Luego usé el depurador de Visual Studio para tomar las capturas: en la primera, coloqué un breakpoint en particles[i]->update(dt) dentro de ofApp.cpp y abrí la ventana Autos/Locals para mostrar cómo un puntero de tipo Particle* apunta dinámicamente a un objeto FallingParticle, evidenciando el polimorfismo en tiempo de ejecución a través de la VTable. En la segunda captura, puse un breakpoint dentro de FallingParticle::update() para mostrar las variables del objeto (this) justo en el frame donde position.y >= explosionThreshold se vuelve verdadero y cambia exploded a true.
 
-Capturas: 
+Capturas: <img width="1907" height="1031" alt="image" src="https://github.com/user-attachments/assets/2b94520a-be1d-4998-a194-53cb16a6f437" />
+<img width="1913" height="1029" alt="image" src="https://github.com/user-attachments/assets/ba577b08-426b-4a46-8595-40e8e3fd0f7a" />
+<img width="1903" height="1029" alt="image" src="https://github.com/user-attachments/assets/3a53ddaf-a973-4bee-bf28-846f4d34657e" />
+<img width="1915" height="1032" alt="image" src="https://github.com/user-attachments/assets/5a553021-0dbd-44ed-b4af-f524cf335ff4" />
+<img width="1914" height="1030" alt="image" src="https://github.com/user-attachments/assets/9d2a70a1-07dc-4f31-a970-a732bf3f4071" />
+
+
+
+
+
