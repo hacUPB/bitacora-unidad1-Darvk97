@@ -303,90 +303,7 @@ R//: Los métodos virtuales hacen posible el polimorfismo. La vtable guarda las 
 
 ### 1. Agrega dos nuevos tipos de Particle diferentes a RisingParticle.
 
-R//: createRisingParticle() (ofApp.cpp)
-
-```asm
-void ofApp::createRisingParticle() {
-
-    float minX = ofGetWidth() * 0.35;
-    float maxX = ofGetWidth() * 0.65;
-    float spawnX = ofRandom(minX, maxX);
-
-    glm::vec2 pos(spawnX, ofGetHeight());
-
-    glm::vec2 target(
-        ofGetWidth()/2 + ofRandom(-300,300),
-        ofGetHeight()*0.10 + ofRandom(-30,30));
-
-    glm::vec2 direction = glm::normalize(target - pos);
-    glm::vec2 vel = direction * ofRandom(250,350);
-
-    ofColor col;
-    col.setHsb(ofRandom(255),220,255);
-
-    float lifetime = ofRandom(1.5,3.5);
-
-    int type = (int)ofRandom(3);
-
-    if(type == 0)
-        particles.push_back(new RisingParticle(pos, vel, col, lifetime));
-    else if(type == 1)
-        particles.push_back(new ZigZagParticle(pos, vel, col, lifetime));
-    else
-        particles.push_back(new SpiralParticle(pos, vel, col, lifetime));
-}
-```
-
-update() (ofApp.cpp)
-
-```asm
-void ofApp::update() {
-
-    float dt = ofGetLastFrameTime();
-
-    for(int i=0;i<particles.size();i++)
-        particles[i]->update(dt);
-
-    for(int i=particles.size()-1;i>=0;i--){
-
-        if(particles[i]->shouldExplode()){
-
-            int explosionType = (int)ofRandom(4);
-            int numParticles = (int)ofRandom(20,30);
-
-            for(int j=0;j<numParticles;j++){
-
-                if(explosionType==0)
-                    particles.push_back(new CircularExplosion(
-                        particles[i]->getPosition(),
-                        particles[i]->getColor()));
-
-                else if(explosionType==1)
-                    particles.push_back(new RandomExplosion(
-                        particles[i]->getPosition(),
-                        particles[i]->getColor()));
-
-                else if(explosionType==2)
-                    particles.push_back(new StarExplosion(
-                        particles[i]->getPosition(),
-                        particles[i]->getColor()));
-
-                else
-                    particles.push_back(new FireworkExplosion(
-                        particles[i]->getPosition(),
-                        particles[i]->getColor()));
-            }
-
-            delete particles[i];
-            particles.erase(particles.begin()+i);
-        }
-        else if(particles[i]->isDead()){
-            delete particles[i];
-            particles.erase(particles.begin()+i);
-        }
-    }
-}
-```
+R//: 
 
 ### nueva particula #1: FallingParticle (ofApp.cpp y .h):
 
@@ -481,138 +398,129 @@ public:
 
 ```
 
-### nueva particula #2: createLeftFallingParticle y createRightFallingParticle (ofApp.cpp y .h):
+### nueva particula #2: ArrowParticle y StarParticle: 
 
-createLeftFallingParticle y createRightFallingParticle (ofApp.cpp)
- 
+OfApp.h
+
 ```asm
-void ofApp::keyPressed(int key) {
-	if (key == 'p') {
-		for (int i = 0; i < 500; i++) {
-			createRisingParticle();
-			createFallingParticle();
+// --------------------------------------------------------------
+// Partícula estrella
+// --------------------------------------------------------------
+class StarParticle : public Particle {
+protected:
+	glm::vec2 position;
+	glm::vec2 velocity;
+	ofColor color;
+	float lifetime;
+	float age;
+	bool exploded;
+	float rotation;
+
+public:
+	StarParticle(const glm::vec2 & pos, const glm::vec2 & vel, const ofColor & col, float life)
+		: position(pos)
+		, velocity(vel)
+		, color(col)
+		, lifetime(life)
+		, age(0)
+		, exploded(false)
+		, rotation(0) { }
+
+	void update(float dt) override {
+		position += velocity * dt;
+		age += dt;
+		rotation += 180.0f * dt;
+
+		velocity.y += 9.8f * dt * 8; 
+
+		float explosionThreshold = ofGetHeight() * 0.85f + ofRandom(-30, 30);
+		if (position.y >= explosionThreshold || age >= lifetime) {
+			exploded = true;
 		}
 	}
-	if (key == 'w') { 
-		createFallingParticle();
+
+	void draw() override {
+		ofSetColor(color);
+		ofPushMatrix();
+		ofTranslate(position.x, position.y);
+		ofRotateDeg(rotation);
+
+		int points = 5;
+		float rOuter = 12.0f;
+		float rInner = 5.0f;
+
+		ofBeginShape();
+		for (int i = 0; i < points * 2; i++) {
+			float r = (i % 2 == 0) ? rOuter : rInner;
+			float angle = i * glm::pi<float>() / points;
+			float x = r * cos(angle);
+			float y = r * sin(angle);
+			ofVertex(x, y);
+		}
+		ofEndShape(true);
+
+		ofPopMatrix();
 	}
-	if (key == 's') {
-		createRisingParticle();
-	}
-	if (key == 'a') {
-		createLeftFallingParticle();
-	}
-	if (key == 'd') {
-		createRightFallingParticle();
-	}
-}
 
-void ofApp::mousePressed(int x, int y, int button) {
-	createRisingParticle();
-	createFallingParticle();
-	createLeftFallingParticle();
-	createRightFallingParticle();
-
-}
-
-void ofApp::createLeftFallingParticle() {
-	float spawnX = ofRandom(0, ofGetWidth() * 0.15f);
-	glm::vec2 pos(spawnX, 0); // Arriba a la izquierda
-
-	// Apunta hacia el centro-bajo
-	glm::vec2 target(
-		ofGetWidth() * 0.35f + ofRandom(-100, 100),
-		ofGetHeight() * 0.85f + ofRandom(-30, 30));
-
-	glm::vec2 direction = glm::normalize(target - pos);
-	glm::vec2 vel = direction * ofRandom(250, 350);
-
-	ofColor col;
-	col.setHsb(ofRandom(255), 220, 255);
-
-	float lifetime = ofRandom(1.5f, 3.5f);
-
-	particles.push_back(new FallingParticle(pos, vel, col, lifetime));
-}
+	bool isDead() const override { return exploded; }
+	bool shouldExplode() const override { return exploded; }
+	glm::vec2 getPosition() const override { return position; }
+	ofColor getColor() const override { return color; }
+};
 
 // --------------------------------------------------------------
-void ofApp::createRightFallingParticle() {
-	float spawnX = ofRandom(ofGetWidth() * 0.85f, ofGetWidth());
-	glm::vec2 pos(spawnX, 0); // Arriba a la derecha
+// Partícula flecha
+// --------------------------------------------------------------
+class ArrowParticle : public Particle {
+protected:
+	glm::vec2 position;
+	glm::vec2 velocity;
+	ofColor color;
+	float lifetime;
+	float age;
+	bool exploded;
 
-	// Apunta hacia el centro-bajo
-	glm::vec2 target(
-		ofGetWidth() * 0.65f + ofRandom(-100, 100),
-		ofGetHeight() * 0.85f + ofRandom(-30, 30));
-
-	glm::vec2 direction = glm::normalize(target - pos);
-	glm::vec2 vel = direction * ofRandom(250, 350);
-
-	ofColor col;
-	col.setHsb(ofRandom(255), 220, 255);
-
-	float lifetime = ofRandom(1.5f, 3.5f);
-
-	particles.push_back(new FallingParticle(pos, vel, col, lifetime));
-}
-
-```
-
- createLeftFallingParticle y createRightFallingParticle (OfApp.h)
-
-```asm
-class ofApp : public ofBaseApp {
 public:
-	void setup();
-	void update();
-	void draw();
-	void mousePressed(int x, int y, int button);
-	void keyPressed(int key);
-	std::vector<Particle *> particles;
-	~ofApp();
+	ArrowParticle(const glm::vec2 & pos, const glm::vec2 & vel, const ofColor & col, float life)
+		: position(pos)
+		, velocity(vel)
+		, color(col)
+		, lifetime(life)
+		, age(0)
+		, exploded(false) { }
 
-private:
-	void createRisingParticle();
-	void createFallingParticle();
-	void createLeftFallingParticle();
-	void createRightFallingParticle();
+	void update(float dt) override {
+		position += velocity * dt;
+		age += dt;
+
+		velocity.y += 9.8f * dt * 8; // Gravedad
+
+		float explosionThreshold = ofGetHeight() * 0.85f + ofRandom(-30, 30);
+		if (position.y >= explosionThreshold || age >= lifetime) {
+			exploded = true;
+		}
+	}
+
+	void draw() override {
+		ofSetColor(color);
+		ofPushMatrix();
+		ofTranslate(position.x, position.y);
+
+		float angle = glm::degrees(atan2(velocity.y, velocity.x));
+		ofRotateDeg(angle);
+
+		ofDrawTriangle(12, 0, -8, -7, -8, 7);
+		ofDrawRectangle(-12, -2, 6, 4);
+
+		ofPopMatrix();
+	}
+
+	bool isDead() const override { return exploded; }
+	bool shouldExplode() const override { return exploded; }
+	glm::vec2 getPosition() const override { return position; }
+	ofColor getColor() const override { return color; }
 };
 
-### 2. Implementar un nuevo modo de explosión.
-
-R//:
-
-FireworkExplosion (ofApp.h)
-
-```asm
-class FireworkExplosion : public ExplosionParticle {
-public:
-    FireworkExplosion(const glm::vec2& pos, const ofColor& col)
-        : ExplosionParticle(pos, glm::vec2(0, 0), col, 2.0f, ofRandom(4, 8)) {
-
-        float angle = ofRandom(0, TWO_PI);
-        float speed = ofRandom(140, 260);
-
-        velocity = glm::vec2(cos(angle), sin(angle)) * speed;
-    }
-
-    void update(float dt) override {
-        position += velocity * dt;
-
-        velocity *= 0.99f;
-        velocity.y += 140 * dt;
-
-        age += dt;
-
-        float alpha = ofMap(age, 0, lifetime, 255, 0, true);
-        color.a = alpha;
-    }
-
-    void draw() override {
-        ofSetColor(color);
-        ofDrawCircle(position, size);
-    }
-};
 ```
 
 ## Codigo completo
@@ -876,6 +784,124 @@ public:
 	ofColor getColor() const override { return color; }
 };
 
+// --------------------------------------------------------------
+// Partícula estrella
+// --------------------------------------------------------------
+class StarParticle : public Particle {
+protected:
+	glm::vec2 position;
+	glm::vec2 velocity;
+	ofColor color;
+	float lifetime;
+	float age;
+	bool exploded;
+	float rotation;
+
+public:
+	StarParticle(const glm::vec2 & pos, const glm::vec2 & vel, const ofColor & col, float life)
+		: position(pos)
+		, velocity(vel)
+		, color(col)
+		, lifetime(life)
+		, age(0)
+		, exploded(false)
+		, rotation(0) { }
+
+	void update(float dt) override {
+		position += velocity * dt;
+		age += dt;
+		rotation += 180.0f * dt;
+
+		velocity.y += 9.8f * dt * 8; 
+
+		float explosionThreshold = ofGetHeight() * 0.85f + ofRandom(-30, 30);
+		if (position.y >= explosionThreshold || age >= lifetime) {
+			exploded = true;
+		}
+	}
+
+	void draw() override {
+		ofSetColor(color);
+		ofPushMatrix();
+		ofTranslate(position.x, position.y);
+		ofRotateDeg(rotation);
+
+		int points = 5;
+		float rOuter = 12.0f;
+		float rInner = 5.0f;
+
+		ofBeginShape();
+		for (int i = 0; i < points * 2; i++) {
+			float r = (i % 2 == 0) ? rOuter : rInner;
+			float angle = i * glm::pi<float>() / points;
+			float x = r * cos(angle);
+			float y = r * sin(angle);
+			ofVertex(x, y);
+		}
+		ofEndShape(true);
+
+		ofPopMatrix();
+	}
+
+	bool isDead() const override { return exploded; }
+	bool shouldExplode() const override { return exploded; }
+	glm::vec2 getPosition() const override { return position; }
+	ofColor getColor() const override { return color; }
+};
+
+// --------------------------------------------------------------
+// Partícula flecha
+// --------------------------------------------------------------
+class ArrowParticle : public Particle {
+protected:
+	glm::vec2 position;
+	glm::vec2 velocity;
+	ofColor color;
+	float lifetime;
+	float age;
+	bool exploded;
+
+public:
+	ArrowParticle(const glm::vec2 & pos, const glm::vec2 & vel, const ofColor & col, float life)
+		: position(pos)
+		, velocity(vel)
+		, color(col)
+		, lifetime(life)
+		, age(0)
+		, exploded(false) { }
+
+	void update(float dt) override {
+		position += velocity * dt;
+		age += dt;
+
+		velocity.y += 9.8f * dt * 8; // Gravedad
+
+		float explosionThreshold = ofGetHeight() * 0.85f + ofRandom(-30, 30);
+		if (position.y >= explosionThreshold || age >= lifetime) {
+			exploded = true;
+		}
+	}
+
+	void draw() override {
+		ofSetColor(color);
+		ofPushMatrix();
+		ofTranslate(position.x, position.y);
+
+		float angle = glm::degrees(atan2(velocity.y, velocity.x));
+		ofRotateDeg(angle);
+
+		ofDrawTriangle(12, 0, -8, -7, -8, 7);
+		ofDrawRectangle(-12, -2, 6, 4);
+
+		ofPopMatrix();
+	}
+
+	bool isDead() const override { return exploded; }
+	bool shouldExplode() const override { return exploded; }
+	glm::vec2 getPosition() const override { return position; }
+	ofColor getColor() const override { return color; }
+};
+
 ```
 
 ### OfApp.cpp
@@ -1000,12 +1026,13 @@ void ofApp::createFallingParticle() {
 
 // --------------------------------------------------------------
 void ofApp::createLeftFallingParticle() {
-	float spawnX = ofRandom(0, ofGetWidth() * 0.15f);
-	glm::vec2 pos(spawnX, 0); // Arriba a la izquierda
+	// Posición inicial: Borde izquierdo (X = 0) a una altura aleatoria en el lateral
+	float spawnY = ofRandom(ofGetHeight() * 0.10f, ofGetHeight() * 0.50f);
+	glm::vec2 pos(0, spawnY);
 
-	// Apunta hacia el centro-bajo
+	// Punto objetivo en la zona centro-inferior
 	glm::vec2 target(
-		ofGetWidth() * 0.35f + ofRandom(-100, 100),
+		ofGetWidth() * 0.40f + ofRandom(-100, 100),
 		ofGetHeight() * 0.85f + ofRandom(-30, 30));
 
 	glm::vec2 direction = glm::normalize(target - pos);
@@ -1016,17 +1043,23 @@ void ofApp::createLeftFallingParticle() {
 
 	float lifetime = ofRandom(1.5f, 3.5f);
 
-	particles.push_back(new FallingParticle(pos, vel, col, lifetime));
+	// Alterna entre Estrella y Flecha
+	if (ofRandom(1.0f) > 0.5f) {
+		particles.push_back(new StarParticle(pos, vel, col, lifetime));
+	} else {
+		particles.push_back(new ArrowParticle(pos, vel, col, lifetime));
+	}
 }
 
 // --------------------------------------------------------------
 void ofApp::createRightFallingParticle() {
-	float spawnX = ofRandom(ofGetWidth() * 0.85f, ofGetWidth());
-	glm::vec2 pos(spawnX, 0); // Arriba a la derecha
+	// Posición inicial: Borde derecho (X = ancho) a una altura aleatoria en el lateral
+	float spawnY = ofRandom(ofGetHeight() * 0.10f, ofGetHeight() * 0.50f);
+	glm::vec2 pos(ofGetWidth(), spawnY);
 
-	// Apunta hacia el centro-bajo
+	// Punto objetivo en la zona centro-inferior
 	glm::vec2 target(
-		ofGetWidth() * 0.65f + ofRandom(-100, 100),
+		ofGetWidth() * 0.60f + ofRandom(-100, 100),
 		ofGetHeight() * 0.85f + ofRandom(-30, 30));
 
 	glm::vec2 direction = glm::normalize(target - pos);
@@ -1037,7 +1070,12 @@ void ofApp::createRightFallingParticle() {
 
 	float lifetime = ofRandom(1.5f, 3.5f);
 
-	particles.push_back(new FallingParticle(pos, vel, col, lifetime));
+	// Alterna entre Estrella y Flecha
+	if (ofRandom(1.0f) > 0.5f) {
+		particles.push_back(new StarParticle(pos, vel, col, lifetime));
+	} else {
+		particles.push_back(new ArrowParticle(pos, vel, col, lifetime));
+	}
 }
 
 // --------------------------------------------------------------
@@ -1046,7 +1084,6 @@ void ofApp::mousePressed(int x, int y, int button) {
 	createFallingParticle();
 	createLeftFallingParticle();
 	createRightFallingParticle();
-
 }
 
 // --------------------------------------------------------------
@@ -1079,18 +1116,19 @@ ofApp::~ofApp() {
 	particles.clear();
 }
 
+
 ```
 
 ### 1. ¿Cómo y por qué de la implementación de cada una de las extensiones solicitadas al caso de estudio?
 
-R//: agregué la clase FallingParticle y el método createFallingParticle() porque el código base solo lanzaba fuegos artificiales desde la base y quería simular una caída descendente. Hice que la partícula nazca en la parte superior ($y = 0$) y en su método update() apliqué gravedad hacia abajo ($+y$), haciendo que explote cuando su posición vertical alcanza el límite fijado (position.y >= explosionThreshold). tambien creé los métodos createLeftFallingParticle() y createRightFallingParticle() para lanzar partículas desde los esquinas superiores (al 15% y 85% del ancho respectivamente) con velocidad diagonal hacia el centro, logrando trayectorias cruzadas y un espectáculo visual más dinámico.
+R//: agregué la clase FallingParticle y el método createFallingParticle() porque el código base solo lanzaba fuegos artificiales desde la base y quería simular una caída descendente. Hice que la partícula nazca en la parte superior (y = 0) y en su método update() apliqué gravedad hacia abajo (+y), haciendo que explote cuando su posición vertical alcanza el límite fijado (position.y >= explosionThreshold) y agregue Las clases ArrowParticle y StarParticle asignandoles a ambos los metodos createLeftFallingParticle(); y createRightFallingParticle(); para que ambas particulas caigan en la misma parte y de la misma forma y no tener que estar dandole un metodo a cada una por lado y lado y al igual que FallingParticle les agregué a cada uno en su metodo update la gravedad hacia abajo para que caigan en un efecto de curva y cuando alcancen el limite de su posicion vertical puedan explotar (explosionThreshold = ofGetHeight()).
 
 ### 2. ¿Cómo y por qué de la implementación de los conceptos de encapsulamiento, herencia y polimorfismo en tu código?
 
 R//: 
-- El encapsulamiento protege los atributos como position, velocity y exploded dentro de FallingParticle con acceso protected/private, evitando que ofApp modifique la física interna y permitiendo su lectura solo con getters públicos como getPosition().
-- La herencia hace que FallingParticle derive de la clase base Particle (class FallingParticle : public Particle), reutilizando su estructura común sin duplicar código y lo miso con createLeftFallingParticle() y createRightFallingParticle().
-- El polimorfismo sobrescribe los métodos virtuales update() y draw() con override. Esto me permitió guardar todas las partículas en un solo vector (vector<Particle*> particles) y procesarlas en un mismo bucle, dejando que el programa determine en tiempo de ejecución (mediante la VTable) qué método ejecutar según la partícula.
+- El encapsulamiento protege los atributos como position, velocity y exploded dentro de FallingParticle, ArrowParticle y StarParticle con acceso protected/private, evitando que ofApp modifique la física interna y permitiendo su lectura solo con getters públicos como getPosition().
+- La herencia hace que FallingParticle, ArrowParticle y StarParticle derive de la clase base Particle (class FallingParticle : public Particle), reutilizando su estructura común sin duplicar código.
+- El polimorfismo sobrescribe los métodos virtuales update() y draw() con override. Esto me permitió guardar todas las partículas en un solo vector (vector<Particle*> particles) y procesarlas en un mismo bucle, dejando que el programa determine en tiempo de ejecución (VTable) qué método ejecutar según la partícula.
 
 ### 3. Explica cómo verificaste que cada una de las extensiones funciona correctamente, muestra capturas de pantalla del depurador donde evidencias lo anterior, en particular el polimorfismo en tiempo de ejecución.
 
