@@ -20,6 +20,6 @@ captura 4 (Repel):
 <img width="1918" height="987" alt="image" src="https://github.com/user-attachments/assets/b7b0c16f-28c2-4fa9-9e72-5a114fa4df8c" />
 
 4. ¿Qué crees que está pasando “detrás de cámaras” cuando presionas las teclas? Formula una hipótesis inicial sobre cómo la aplicación cambia el comportamiento de las partículas.
-R//:
+R//: a la clase Particle se le da una accion de OnNotify para un evento y luego a esos eventos se les asignan un nombre y un estado, en este caso 'repel' es el nombre del evento y se le da la clase RepelState para que luego al asignar la tecla s en el KeyPressed se le notifica con Notify al OnNotify("Stop") para que ejecute esa accion y en este caso, las particulas se alejen.
 
 # Actividad 9: Investiga el patrón observer #
