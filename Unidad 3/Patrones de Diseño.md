@@ -23,3 +23,47 @@ captura 4 (Repel):
 R//: a la clase Particle se le da una accion de OnNotify para un evento y luego a esos eventos se les asignan un nombre y un estado, en este caso 'repel' es el nombre del evento y se le da la clase RepelState para que luego al asignar la tecla s en el KeyPressed se le notifica con Notify al OnNotify("Stop") para que ejecute esa accion y en este caso, las particulas se alejen.
 
 # Actividad 9: Investiga el patrón observer #
+1. Explica con tus propias palabras el propósito del patrón Observer. ¿Qué problema resuelve?
+R//: el observer permite que el sujeto notifique a los observadores cuando pasa un cambio de estado o evento especifico, pero sin determinar especificamente que clase o tipo de objeto es cada observador, el problema que resuelve es no ponerle tanto peso al ofapp, ya que sin el, para cambiar la conducta de una particula el ofapp tendria que mirar cual particula es y de que tipo y asignarle un metodo especifico, pero con el observer solo se emite un mensaje global (sea 'stop', 'repel', 'attract', etc) y la particula decide como reacciona a ese mensaje.
+
+2. Dibuja un diagrama que muestre la relación entre `Subject`, `Observer`, `ofApp` y `Particle` en el caso de estudio, indicando quién es el Sujeto y quiénes los Observadores.
+R//:
+
+        ┌─────────────────┐                     ┌─────────────────┐
+        │    Subject      │                     │    Observer     │
+        ├─────────────────┤                     ├─────────────────┤
+        │ - observers     │                    *│ + onNotify()    │
+        │ + addObserver() ├────────────────────►│                 │
+        │ + notify()      │                     └────────┬────────┘
+        └────────┬────────┘                              ▲
+                 ▲                                       │ (hereda)
+                 │ (hereda)                              │
+        ┌────────┴────────┐                     ┌────────┴────────┐
+        │      ofApp      │                     │    Particle     │
+        ├─────────────────┤                     ├─────────────────┤
+        │ - particles     ├────────────────────►│ + onNotify()    │
+        │ + keyPressed()  │                     │ + setState()    │
+        └─────────────────┘                     └─────────────────┘
+
+
+3. Construye un diagrama de secuencia que muestre cómo funciona el patrón Observer al presionar una tecla.
+R//:
+
+´´´asm
+ [Usuario]       ofApp (Sujeto)                       Particle (Observador)
+   │                  │                                       │
+   │  keyPressed('a') │                                       │
+   ├─────────────────►│                                       │
+   │                  │ notify("attract")                     │
+   │                  ├──────────────────────────────────────►│
+   │                  │                                       │ onNotify("attract")
+   │                  │                                       ├───────────────────┐
+   │                  │                                       │                   │
+   │                  │                                       │ setState(Attract) │
+   │                  │                                       │◄──────────────────┘
+
+´´´
+
+4. ¿Qué ventajas crees que ofrece usar el patrón Observer en esta aplicación en comparación con, por ejemplo, que `ofApp::update` recorriera todas las partículas y les dijera directamente que cambien su comportamiento basado en una variable global? Piensa en términos de acoplamiento y extensibilidad.
+R//:
+
