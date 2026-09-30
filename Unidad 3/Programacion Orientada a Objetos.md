@@ -1136,11 +1136,9 @@ R//: Verifiqué el funcionamiento probando el programa de forma interactiva con 
 
 Capturas: <img width="1907" height="1031" alt="image" src="https://github.com/user-attachments/assets/2b94520a-be1d-4998-a194-53cb16a6f437" />
 <img width="1913" height="1029" alt="image" src="https://github.com/user-attachments/assets/ba577b08-426b-4a46-8595-40e8e3fd0f7a" />
-<img width="1903" height="1029" alt="image" src="https://github.com/user-attachments/assets/3a53ddaf-a973-4bee-bf28-846f4d34657e" />
-<img width="1915" height="1032" alt="image" src="https://github.com/user-attachments/assets/5a553021-0dbd-44ed-b4af-f524cf335ff4" />
-<img width="1914" height="1030" alt="image" src="https://github.com/user-attachments/assets/9d2a70a1-07dc-4f31-a970-a732bf3f4071" />
-
-
+<img width="1900" height="1006" alt="image" src="https://github.com/user-attachments/assets/b8c415c1-e054-434c-aced-09dd1dbeeb41" />
+<img width="1908" height="1007" alt="image" src="https://github.com/user-attachments/assets/af5eb8ce-16bb-41af-8667-a1a860496599" />
+<img width="1917" height="1006" alt="image" src="https://github.com/user-attachments/assets/33cb6d89-ceea-45c0-9a8c-47ed4e53aa3e" />
 
 
 
