@@ -415,7 +415,7 @@ OfApp.cpp
         		particle->size = ofRandom(5.0f, 8.0f);
         		particle->color = ofColor(0, 0, 255);
         	}
-        	else if (type == "black_hole") {
+        	else if (type == "neutron_star") {
         		particle->size = ofRandom(80.0f, 90.0f);
         		particle->color = ofColor(500, 500, 500);
         	}
@@ -447,7 +447,7 @@ OfApp.cpp
         		addObserver(p);
         	}
         	for (int i = 0; i < 1; ++i) {
-        		Particle* p = ParticleFactory::createParticle("black_hole");
+        		Particle* p = ParticleFactory::createParticle("neutron_star");
         		particles.push_back(p);
         		addObserver(p);
         	}
@@ -486,10 +486,10 @@ OfApp.cpp
 
 
 3. Explica cómo usaste el patrón Factory para esta nueva partícula.
-R//: 
+R//: me copie del ejemplo de uno de los ejercicos del agujero negro y cree una estrella de neutrones gigante que va a todos lados, la añadi desde el ofApp::setup() y la agregue tambien a Particle* ParticleFactory::createParticle para poder determinar su velocidad y color (estuve 20 minutos decidiendo que color).
 
 4. Describe cómo implementaste el patrón Observer para esta nueva partícula.
-R//: lo agregue en el Particle::onNotify y le agregue la tecla q para que lo notifique al presionarla y el observer la detecte como el evento 'shake' y le de el estado Shakestate y se ejecute.
+R//: lo agregue en el  ofApp::setup() creando una nueva para la estrella de neutrones le di addObserver(p); para que el cambio de estado lo detecte y ejecute dicho estado (le puse otro estado mas q: shake)
 
 5. Explica cómo aplicaste el patrón State a esta nueva partícula.
-R//: cree una nueva clase llamada Shakestate que hace que las particulas se detengan y tiemblen, lo defini en el .h para luego poder agregarlo en Particle::onNotify y le configure la velocidad y la posicion donde se sacuden para que la particula se detenga y tiemble pero en su sitio
+R//: cree una nueva clase llamada Shakestate que hace que las particulas se detengan y tiemblen, lo defini en el .h para luego poder agregarlo en Particle::onNotify y le configure la velocidad y la posicion donde se sacuden para que la particula se detenga y tiemble pero en su sitio, pero esto fue solo porque quise al tener el addObserver(p); de por si la estrella de neutrones ya tiene para ejecutar los estados y los cambios de estado con  todas las particulas.
