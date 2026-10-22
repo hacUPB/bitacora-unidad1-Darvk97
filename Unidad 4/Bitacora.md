@@ -21,4 +21,18 @@ Qué tal si ensayas. Prueba con esta línea
 
 `glViewport(0, bufferHeight/2, bufferWidth/2, bufferHeight/2);`
 Cambia los valores de bufferWidth y bufferHeight: divide por 2, por 4, multiplica por 2, por 4, etc. ¿Qué pasa? ¿Qué observas? ¿Qué crees que está pasando?
-R//:  
+R//: al dividir por 2 la imagen se aleja del triangulo y lo deja en la esquina inferior izquierda, al dividir por 4 la imagen se aleja aun mas y el triangulo se ve mas pequeño todavia.
+
+al multiplicar por 2 se acerca la imagen y hace mas grande el triangulo, todo lo contrario a lo anterior y se enfoca en la esquina izquierda del triangulo y se muestra como si se hiciera zoom, al multiplicar por 4 se acerca tanto que el triangulo desaparece y se ve solo el fondo
+
+Ya llevas un rato leyendo y no has hecho digestión. Para favorecer tu aprendizaje, es necesario que te detengas un momento y ELABORES lo que has visto hasta ahora. Mira, quiero contarte algo. Lo que he venido haciendo de manera implícita en el curso es enseñarte a aprender a aprender. ¿Te has dado cuenta? Te voy exponiendo a conceptos y luego te pido que experimentes, que los pongas en práctica, que los reflexiones. Entonces, no te quedes largos periodos de tiempo leyendo, viendo tutoriales o escuchando. Cada cierto tiempo, puede ser cada 30 minutos o cada hora, haz una pausa y reflexiona sobre lo que has aprendido.
+¿Cómo lo haces? Realiza un resumen de lo que has aprendido hasta ahora, haciendo un diagrama conceptual o un mapa mental. Experimentando. ¿Cómo? Haciendo la pregunta mágica: ¿Qué pasaría si? ¿Qué pasaría si cambio el tamaño de la ventana? ¿Qué pasaría si cambio el tamaño del viewport?
+Entonces hagamos “digestión”: en tu bitácora, escribe un resumen de lo que has aprendido hasta ahora y piensa en un experimento del tipo ¿Qué pasaría si?
+
+R//: Entendí que el contexto OpenGL es el entorno donde se guardan los recursos y estados necesarios para dibujar gráficos, como texturas, shaders y buffers. GLFW se encarga de crear la ventana y el contexto, mientras que OpenGL envía las instrucciones y la GPU las ejecuta para dibujar en el framebuffer, que es como una hoja donde se forma la imagen antes de mostrarse en pantalla. También aprendí que el viewport define el área donde se dibuja y que debe ajustarse cuando cambia el tamaño de la ventana.
+
+mi experimento seria que usando la actividad anterior de multiplicar y dividir en glViewport(0, 0, bufferWidth, bufferHeight); que pasaria si multiplico en un y divido en otro por ejemplo: glViewport(0, 0, bufferWidth/2, bufferHeight*2); multiplico la altura por 2 y el ancho lo divido por 2.
+
+Resultado: esta atrocidad: 
+<img width="1915" height="1015" alt="image" src="https://github.com/user-attachments/assets/f7b8e3f6-314c-4ad1-87a9-d933498836b2" />
+
