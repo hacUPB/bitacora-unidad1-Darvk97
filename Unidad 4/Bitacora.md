@@ -33,6 +33,6 @@ R//: Entendí que el contexto OpenGL es el entorno donde se guardan los recursos
 
 mi experimento seria que usando la actividad anterior de multiplicar y dividir en glViewport(0, 0, bufferWidth, bufferHeight); que pasaria si multiplico en un y divido en otro por ejemplo: glViewport(0, 0, bufferWidth/2, bufferHeight*2); multiplico la altura por 2 y el ancho lo divido por 2.
 
-Resultado: esta atrocidad: 
+Resultado: esta atrocidad...
 <img width="1915" height="1015" alt="image" src="https://github.com/user-attachments/assets/f7b8e3f6-314c-4ad1-87a9-d933498836b2" />
 
