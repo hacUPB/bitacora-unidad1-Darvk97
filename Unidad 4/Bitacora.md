@@ -129,7 +129,7 @@ R//: Para usar un shader en OpenGL, primero se escribe el código del shader, co
 Implementa el código anterior en tu máquina y captura pantalla del resultado. Pero antes de hacerlo trata de predecir qué va a pasar.
 R//: 
 
-Prediccion: al ejecutar el código se va abrir una ventana con el mismo triangulo que en el ejemplo, pero puede que con distinto fondo o color, no se.
+Prediccion: al ejecutar el código se va abrir una ventana con el mismo triangulo que en el ejemplo, pero puede que con distinto fondo o color.
 
 	#include <iostream>
 	#include <glad/glad.h>
